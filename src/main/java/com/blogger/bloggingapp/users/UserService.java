@@ -6,6 +6,9 @@ import com.blogger.bloggingapp.users.dto.UserResponseDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -36,6 +39,16 @@ public class UserService {
 
         var userResponseDTO=modelMapper.map(loginUser,UserResponseDTO.class);
         return userResponseDTO;
+    }
+
+    public List<UserResponseDTO> getAllUsers(){
+        List<UserEntity> allUsers=userRepository.findAll();
+        List<UserResponseDTO> listAllUsers=new ArrayList<>();
+        for(UserEntity user:allUsers){
+            var userDTO=modelMapper.map(user,UserResponseDTO.class);
+            listAllUsers.add(userDTO);
+        }
+        return  listAllUsers;
     }
 
     public static class UserNotFoundException extends IllegalArgumentException{
