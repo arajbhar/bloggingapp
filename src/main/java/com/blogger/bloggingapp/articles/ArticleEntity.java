@@ -4,7 +4,10 @@ import com.blogger.bloggingapp.commons.BaseEntity;
 import com.blogger.bloggingapp.users.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+
+import java.util.List;
 
 @Entity(name = "articles")
 public class ArticleEntity extends BaseEntity {
@@ -21,4 +24,7 @@ public class ArticleEntity extends BaseEntity {
 
     @ManyToOne
     UserEntity auther;
+
+    @ManyToMany
+    List<UserEntity> likedby;
 }
