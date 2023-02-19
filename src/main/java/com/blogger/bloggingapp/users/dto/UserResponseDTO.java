@@ -1,4 +1,4 @@
-package com.blogger.bloggingapp.users;
+package com.blogger.bloggingapp.users.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

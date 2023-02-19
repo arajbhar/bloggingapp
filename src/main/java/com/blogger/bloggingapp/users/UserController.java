@@ -1,7 +1,7 @@
 package com.blogger.bloggingapp.users;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
+import com.blogger.bloggingapp.users.dto.CreateUserDTO;
+import com.blogger.bloggingapp.users.dto.UserResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
