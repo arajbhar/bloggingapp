@@ -23,7 +23,7 @@ public class ArticleEntity extends BaseEntity {
     String body;
 
     @ManyToOne
-    UserEntity auther;
+    UserEntity author;
 
     @ManyToMany
     List<UserEntity> likedby;
