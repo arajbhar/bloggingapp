@@ -18,7 +18,7 @@ public class AppSecurityConfig {
 
         http
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST,"/users/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/users").permitAll()
                 .requestMatchers(HttpMethod.GET,"/articles").permitAll()
                 .anyRequest().authenticated();
 
