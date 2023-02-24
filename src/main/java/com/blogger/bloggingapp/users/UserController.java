@@ -1,7 +1,9 @@
 package com.blogger.bloggingapp.users;
 
 import com.blogger.bloggingapp.users.dto.CreateUserDTO;
+import com.blogger.bloggingapp.users.dto.LoginUserDTO;
 import com.blogger.bloggingapp.users.dto.UserResponseDTO;
+import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,15 +27,34 @@ public class UserController {
 
         var savedUser=userService.createUser(createUserDTO);
         return ResponseEntity
-                .created(URI.create("/Users/"+savedUser.getId()))
+                .created(URI.create("/users/"+savedUser.getId()))
                 .body(savedUser);
 
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponseDTO> loginUser(@RequestBody LoginUserDTO loginUserDTO){
+
+        var loginUser=userService.loginUser(loginUserDTO);
+        return  ResponseEntity.ok(loginUser);
     }
 
     @GetMapping("")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
+
+    @ExceptionHandler(UserService.UserNotFoundException.class)
+    public ResponseEntity<String> handelUserNotFoundException(UserService.UserNotFoundException e){
+        return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public  ResponseEntity<String> handleIncorrectPassword(IllegalArgumentException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
 
 
 }

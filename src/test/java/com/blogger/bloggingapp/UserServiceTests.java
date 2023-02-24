@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,9 @@ public class UserServiceTests {
 
     private UserService getUserService(){
         ModelMapper modelMapper=new ModelMapper();
-        var userService= new UserService(userRepository,modelMapper);
+        PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+
+        var userService= new UserService(userRepository,modelMapper,passwordEncoder);
         return userService;
     }
 

@@ -4,6 +4,7 @@ import com.blogger.bloggingapp.users.dto.CreateUserDTO;
 import com.blogger.bloggingapp.users.dto.LoginUserDTO;
 import com.blogger.bloggingapp.users.dto.UserResponseDTO;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,13 +16,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponseDTO createUser(CreateUserDTO createUserDTO){
          var userEntity=modelMapper.map(createUserDTO,UserEntity.class);
+         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
          var savedUser=userRepository.save(userEntity);
          var userResponseDTO= modelMapper.map(savedUser,UserResponseDTO.class);
         return userResponseDTO;
@@ -33,8 +38,10 @@ public class UserService {
             throw new UserNotFoundException(loginUserDTO.getUsername());
         }
 
-        if(!loginUser.getPassword().equals(loginUserDTO.getPassword())){
-            throw new IncorrectPasswordException(loginUserDTO.getUsername());
+        var passMatch=passwordEncoder.matches(loginUserDTO.getPassword(),loginUser.getPassword());
+
+        if(!passMatch){
+            throw new IllegalArgumentException("Incorrect Password");
         }
 
         var userResponseDTO=modelMapper.map(loginUser,UserResponseDTO.class);
@@ -53,11 +60,11 @@ public class UserService {
 
     public static class UserNotFoundException extends IllegalArgumentException{
         public UserNotFoundException(Integer id){
-            super("User with id " + id + "not found");
+            super("User with id " + id + " not found");
         }
 
         public UserNotFoundException(String username){
-            super("User with username " + username + "not found");
+            super("User with username " + username + " not found");
         }
     }
 
